@@ -2,10 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Square from './Square';
 import Knight from './Knight';
+import { moveKnight } from '../Game';
 
 export default class Board extends Component {
   constructor(props) {
     super(props);
+  }
+
+  handleSquareClick(toX, toY) {
+    moveKnight(toX, toY);
   }
 
   renderSquare(i) {
@@ -19,7 +24,8 @@ export default class Board extends Component {
 
     return (
       <div key={i}
-        style={{ width: '12.5%', height: '12.5%' }}>
+        style={{ width: '12.5%', height: '12.5%' }}
+        onClick={() => this.handleSquareClick(x, y)}>
         <Square black={black}>
           {squareContents}
         </Square>
