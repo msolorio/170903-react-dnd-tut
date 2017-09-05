@@ -1,38 +1,33 @@
 import React, { Component } from 'react';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import PropTypes from 'prop-types';
+import BoardSquare from './BoardSquare';
 import Square from './Square';
 import Knight from './Knight';
 import { moveKnight, canMoveKnight } from '../Game';
 
-export default class Board extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  handleSquareClick(toX, toY) {
-    if (canMoveKnight(toX, toY)) {
-      moveKnight(toX, toY);
-    }
-  }
+export class Board extends Component {
 
   renderSquare(i) {
-
     const x = i % 8;
     const y = Math.floor(i / 8);
-    // if x + y is an odd number
-    const black = (x + y) % 2 === 1;
-    const [knightX, knightY] = this.props.knightPosition;
-    const squareContents = (x === knightX && y === knightY) ? <Knight /> : null;
 
     return (
       <div key={i}
-        style={{ width: '12.5%', height: '12.5%' }}
-        onClick={() => this.handleSquareClick(x, y)}>
-        <Square black={black}>
-          {squareContents}
-        </Square>
+        style={{ width: '12.5%', height: '12.5%' }}>
+        <BoardSquare x={x} y={y}>
+          {this.renderSquareContent(x, y)}
+        </BoardSquare>
       </div>
     );
+  }
+
+  renderSquareContent(x, y) {
+    const [knightX, knightY] = this.props.knightPosition;
+    if (x === knightX && y === knightY) {
+      return <Knight/>
+    }
   }
 
   render() {
@@ -59,3 +54,5 @@ Board.propTypes = {
     PropTypes.number.isRequired
   ).isRequired
 };
+
+export default DragDropContext(HTML5Backend)(Board);
